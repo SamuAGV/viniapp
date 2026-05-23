@@ -27,7 +27,7 @@ export default function LoginScreen() {
     const success = await login(email, password);
     if (success) {
       // Corrección: usar './' para navegación relativa
-      router.replace('./(tabs)');
+      router.replace('/(tabs)');
     } else {
       Alert.alert('Error', 'Credenciales inválidas');
     }
@@ -39,8 +39,8 @@ export default function LoginScreen() {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <View style={styles.innerContainer}>
-        <Text style={styles.title}>Acceso MultiUsuario</Text>
-        <Text style={styles.subtitle}>Inicia sesión en tu cuenta</Text>
+        <Text style={styles.title}>Inicia Sesíon</Text>
+        <Text style={styles.subtitle}>Ingresa tu datos</Text>
 
         <TextInput
           style={styles.input}
@@ -75,7 +75,7 @@ export default function LoginScreen() {
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={() => router.push('./(auth)/register')}
+          onPress={() => router.push('/(auth)/register')}
           accessibilityLabel="Ir a registro"
         >
           <Text style={styles.link}>¿No tienes cuenta? Regístrate</Text>
