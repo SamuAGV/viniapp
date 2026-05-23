@@ -1,41 +1,12 @@
 import * as SecureStore from 'expo-secure-store';
 import { Record, User } from '../types';
 
+// Claves SIN el símbolo @ (SecureStore no permite @)
 const USERS_KEY = 'app_users';
 const CURRENT_USER_KEY = 'app_current_user';
 const RECORDS_KEY = 'app_records';
 
-// Usuarios por defecto con roles
-export const initDefaultUsers = async (): Promise<void> => {
-  try {
-    const users = await getUsers();
-    if (!users || users.length === 0) {
-      const defaultUsers: User[] = [
-        { 
-          id: '1', 
-          email: 'admin@test.com', 
-          password: '123456', 
-          name: 'Admin Principal',
-          role: 'admin',
-          createdAt: new Date().toISOString()
-        },
-        { 
-          id: '2', 
-          email: 'user@test.com', 
-          password: '123456', 
-          name: 'Usuario Demo',
-          role: 'user',
-          createdAt: new Date().toISOString()
-        },
-      ];
-      await setSecureItem(USERS_KEY, defaultUsers);
-    }
-  } catch (error) {
-    console.error('Error initializing default users:', error);
-  }
-};
-
-// Funciones auxiliares
+// Función auxiliar para guardar datos
 const setSecureItem = async (key: string, value: any): Promise<void> => {
   try {
     await SecureStore.setItemAsync(key, JSON.stringify(value));
@@ -44,6 +15,7 @@ const setSecureItem = async (key: string, value: any): Promise<void> => {
   }
 };
 
+// Función auxiliar para obtener datos
 const getSecureItem = async (key: string): Promise<any> => {
   try {
     const result = await SecureStore.getItemAsync(key);
@@ -51,6 +23,22 @@ const getSecureItem = async (key: string): Promise<any> => {
   } catch (error) {
     console.error('Error reading from SecureStore:', error);
     return null;
+  }
+};
+
+// Usuarios por defecto
+export const initDefaultUsers = async (): Promise<void> => {
+  try {
+    const users = await getUsers();
+    if (!users || users.length === 0) {
+      const defaultUsers: User[] = [
+        { id: '1', email: 'admin@test.com', password: '123456', name: 'Admin', role: 'admin', createdAt: new Date().toISOString() },
+        { id: '2', email: 'user@test.com', password: '123456', name: 'Usuario Demo', role: 'user', createdAt: new Date().toISOString() },
+      ];
+      await setSecureItem(USERS_KEY, defaultUsers);
+    }
+  } catch (error) {
+    console.error('Error initializing default users:', error);
   }
 };
 
@@ -136,7 +124,7 @@ export const deleteRecord = async (id: string): Promise<void> => {
   }
 };
 
-// Funciones específicas para admin
+// Funciones para admin
 export const getAllUsers = async (): Promise<User[]> => {
   return await getUsers();
 };

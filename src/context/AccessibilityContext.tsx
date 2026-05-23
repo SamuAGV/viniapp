@@ -13,7 +13,7 @@ interface AccessibilityContextType {
 
 const AccessibilityContext = createContext<AccessibilityContextType | undefined>(undefined);
 
-// Claves válidas para SecureStore
+// Claves SIN el símbolo @
 const HIGH_CONTRAST_KEY = 'app_high_contrast';
 const LARGE_TEXT_KEY = 'app_large_text';
 const TALKBACK_KEY = 'app_talkback_enabled';
@@ -23,7 +23,6 @@ export const AccessibilityProvider: React.FC<{ children: ReactNode }> = ({ child
   const [largeText, setLargeText] = useState(false);
   const [talkBackEnabled, setTalkBackEnabledState] = useState(false);
 
-  // Cargar configuraciones al inicio
   useEffect(() => {
     loadSettings();
   }, []);
