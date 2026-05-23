@@ -155,7 +155,7 @@ export default function RecordsScreen() {
         <Text style={[styles.cardDescription, textStyle, textColorStyle]}>{item.description}</Text>
         {item.createdAt && (
           <Text style={[styles.date, textStyle, textColorStyle]}>
-            📅 {new Date(item.createdAt).toLocaleDateString()}
+            {new Date(item.createdAt).toLocaleDateString()}
           </Text>
         )}
         <View style={styles.actions}>
@@ -166,7 +166,7 @@ export default function RecordsScreen() {
             accessibilityRole="button"
             accessibilityHint="Abre el formulario para editar este registro"
           >
-            <Text style={[styles.actionText, textStyle]}>✏️ Editar</Text>
+            <Text style={[styles.actionText, textStyle]}>Editar</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.actionButton, styles.deleteButton]}
@@ -175,7 +175,7 @@ export default function RecordsScreen() {
             accessibilityRole="button"
             accessibilityHint="Elimina este registro permanentemente"
           >
-            <Text style={[styles.actionText, textStyle]}>🗑️ Eliminar</Text>
+            <Text style={[styles.actionText, textStyle]}>Eliminar</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -196,7 +196,7 @@ export default function RecordsScreen() {
             accessibilityLabel="No hay registros. Presiona para crear tu primer registro."
             accessibilityRole="button"
           >
-            <Text style={[styles.emptyText, textStyle, textColorStyle]}>📭 No hay registros</Text>
+            <Text style={[styles.emptyText, textStyle, textColorStyle]}>No hay registros</Text>
             <Text style={[styles.emptySubtext, textStyle, textColorStyle]}>Presiona aquí para crear uno</Text>
           </TouchableOpacity>
         }
@@ -215,7 +215,6 @@ export default function RecordsScreen() {
         activeOpacity={0.8}
       >
         <Text style={fabTextStyle}>+</Text>
-        <Text style={[styles.fabLabel, textStyle]}>Nuevo</Text>
       </TouchableOpacity>
 
       <Modal
@@ -233,7 +232,7 @@ export default function RecordsScreen() {
         >
           <View style={modalStyle}>
             <Text style={[styles.modalTitle, textStyle, textColorStyle]}>
-              {editingRecord ? '✏️ Editar Registro' : '➕ Nuevo Registro'}
+              {editingRecord ? 'Editar Registro' : 'Nuevo Registro'}
             </Text>
 
             <Text style={[styles.inputLabel, textStyle, textColorStyle]}>Título *</Text>
@@ -269,7 +268,7 @@ export default function RecordsScreen() {
               accessibilityRole="button"
               accessibilityHint="Guarda el registro en la lista"
             >
-              <Text style={[styles.buttonText, textStyle]}>💾 Guardar</Text>
+              <Text style={[styles.buttonText, textStyle]}>Guardar</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -283,7 +282,7 @@ export default function RecordsScreen() {
               accessibilityRole="button"
               accessibilityHint="Cierra el formulario sin guardar"
             >
-              <Text style={[styles.cancelText, textStyle]}>❌ Cancelar</Text>
+              <Text style={[styles.cancelText, textStyle]}>Cancelar</Text>
             </TouchableOpacity>
           </View>
         </KeyboardAvoidingView>
