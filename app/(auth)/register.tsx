@@ -31,11 +31,14 @@ export default function RegisterScreen() {
     }
 
     const newUser = {
-      id: Date.now().toString(),
-      name,
-      email,
-      password,
-    };
+        id: Date.now().toString(),
+        name,
+        email,
+        password,
+        role: 'user' as const,  // Por defecto, los nuevos usuarios son normales
+        createdAt: new Date().toISOString(),
+      };
+      
 
     await saveUser(newUser);
     Alert.alert('Éxito', 'Usuario registrado. Ahora inicia sesión', [

@@ -1,40 +1,16 @@
-import { Tabs, usePathname, useRouter } from 'expo-router';
-import { Platform, View } from 'react-native';
+import { Tabs } from 'expo-router';
+import { Platform } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { VoiceCommands } from '../../src/components/VoiceCommands';
 import { useAccessibility } from '../../src/context/AccessibilityContext';
-import { useTalkBack } from '../../src/hooks/useTalkBack';
+import { useAuth } from '../../src/context/AuthContext';
 
 export default function TabLayout() {
-  const router = useRouter();
-  const pathname = usePathname();
-  const { announceAction } = useTalkBack({ enabled: true });
-  const { talkBackEnabled, highContrast, largeText } = useAccessibility();
+  const { user } = useAuth();
+  const { highContrast, largeText } = useAccessibility();
+  
+  // Verificación de administrador
+  const isAdmin = user?.role === 'admin';
 
-  const getCurrentScreen = () => {
-    if (pathname.includes('records')) return 'records';
-    if (pathname.includes('profile')) return 'profile';
-    return 'home';
-  };
-
-  const handleVoiceNavigate = (screen: string) => {
-    announceAction(`Navegando a ${screen}`);
-    if (screen === 'home') {
-      router.push('/(tabs)');
-    } else if (screen === 'records') {
-      router.push('/(tabs)/records');
-    } else if (screen === 'profile') {
-      router.push('/(tabs)/profile');
-    }
-  };
-
-  const handleVoiceAction = (action: string) => {
-    if (action === 'new') {
-      announceAction('Abriendo nuevo registro');
-    }
-  };
-
-  // Estilos dinámicos para tabs según accesibilidad
   const tabBarStyle = {
     paddingBottom: Platform.OS === 'ios' ? 20 : 10,
     height: Platform.OS === 'ios' ? 85 : 65,
@@ -51,55 +27,60 @@ export default function TabLayout() {
     fontSize: largeText ? 20 : 18,
   };
 
+  // Definir las tabs base (siempre presentes)
+  const baseScreens = [
+    {
+      name: "index",
+      title: "Inicio",
+      icon: "home"
+    },
+    {
+      name: "records",
+      title: "Registros",
+      icon: "list"
+    },
+    {
+      name: "profile",
+      title: "Perfil",
+      icon: "person"
+    }
+  ];
+
+  // Agregar Admin solo si es necesario
+  const allScreens = isAdmin 
+    ? [
+        ...baseScreens,
+        {
+          name: "admin",
+          title: "Admin",
+          icon: "admin-panel-settings"
+        }
+      ]
+    : baseScreens;
+
   return (
-    <View style={{ flex: 1 }}>
-      <Tabs
-        screenOptions={{
-          tabBarActiveTintColor: '#3498db',
-          tabBarInactiveTintColor: highContrast ? '#888888' : '#7f8c8d',
-          headerStyle: headerStyle,
-          headerTintColor: '#fff',
-          headerTitleStyle: headerTitleStyle,
-          tabBarStyle: tabBarStyle,
-        }}
-      >
+    <Tabs
+      screenOptions={{
+        tabBarActiveTintColor: '#3498db',
+        tabBarInactiveTintColor: highContrast ? '#888888' : '#7f8c8d',
+        headerStyle: headerStyle,
+        headerTintColor: '#fff',
+        headerTitleStyle: headerTitleStyle,
+        tabBarStyle: tabBarStyle,
+      }}
+    >
+      {allScreens.map((screen) => (
         <Tabs.Screen
-          name="index"
+          key={screen.name}
+          name={screen.name}
           options={{
-            title: 'Inicio',
+            title: screen.title,
             tabBarIcon: ({ color, size }) => (
-              <MaterialIcons name="home" size={size} color={color} />
+              <MaterialIcons name={screen.icon} size={size} color={color} />
             ),
           }}
         />
-        <Tabs.Screen
-          name="records"
-          options={{
-            title: 'Registros',
-            tabBarIcon: ({ color, size }) => (
-              <MaterialIcons name="list" size={size} color={color} />
-            ),
-          }}
-        />
-        <Tabs.Screen
-          name="profile"
-          options={{
-            title: 'Perfil',
-            tabBarIcon: ({ color, size }) => (
-              <MaterialIcons name="person" size={size} color={color} />
-            ),
-          }}
-        />
-      </Tabs>
-      
-      {/* Solo mostrar el botón del micrófono si TalkBack está activado */}
-      {talkBackEnabled && (
-        <VoiceCommands
-          onNavigate={handleVoiceNavigate}
-          onAction={handleVoiceAction}
-          currentScreen={getCurrentScreen()}
-        />
-      )}
-    </View>
+      ))}
+    </Tabs>
   );
 }

@@ -3,6 +3,8 @@ export interface User {
     name: string;
     email: string;
     password: string;
+    role: 'admin' | 'user';  // Añadir rol
+    createdAt?: string;
   }
   
   export interface Record {
@@ -10,6 +12,8 @@ export interface User {
     title: string;
     description: string;
     createdAt?: string;
+    userId?: string;  // Para saber qué usuario creó el registro
+    userName?: string; // Nombre del usuario que creó el registro
   }
   
   export interface AccessibilitySettings {

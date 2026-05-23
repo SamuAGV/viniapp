@@ -20,6 +20,9 @@ export default function HomeScreen() {
     oldest: null as Record | null,
   });
 
+  // Verificar si el usuario es administrador
+  const isAdmin = user?.role === 'admin';
+
   useEffect(() => {
     announceScreen('Pantalla de inicio. Bienvenido a la app.');
     loadRecordsAndStats();
@@ -98,21 +101,20 @@ export default function HomeScreen() {
   return (
     <ScrollView style={containerStyle} showsVerticalScrollIndicator={false}>
       {/* Tarjeta de bienvenida */}
-      <View 
-        style={cardStyle}
-        accessible={true}
-        accessibilityLabel={`Bienvenido ${user?.name}. Esta es la pantalla principal de la aplicación.`}
-        accessibilityRole="summary"
-      >
-        <Text style={[styles.welcome, textStyle, textColorStyle]}>
-          Bienvenido 
-        </Text>
-        <Text style={[styles.welcome, textStyle, textColorStyle]}>
-          {user?.name} 
-        </Text>
-        {/*<Text style={[styles.message, textStyle, textColorStyle]}>
+      <View style={[styles.card, cardStyle]}>
+        <View style={styles.welcomeHeader}>
+          <Text style={[styles.welcome, textStyle, textColorStyle]}>
+            ¡Bienvenido, {user?.name}!
+          </Text>
+          {isAdmin && (
+            <View style={styles.adminBadge}>
+              <Text style={styles.adminBadgeText}>Administrador</Text>
+            </View>
+          )}
+        </View>
+        <Text style={[styles.message, textStyle, textColorStyle]}>
           Esta aplicación está diseñada con principios de accesibilidad y usabilidad.
-        </Text>*/}
+        </Text>
       </View>
 
       {/* Sección de métricas */}
@@ -145,7 +147,7 @@ export default function HomeScreen() {
       {/* Sección de fechas importantes */}
       <View style={styles.datesSection}>
         <Text style={[styles.sectionTitle, textStyle, textColorStyle]}>
-        Fechas Importantes
+          Fechas Importantes
         </Text>
 
         {/* Registro más reciente */}
@@ -201,47 +203,12 @@ export default function HomeScreen() {
         </TouchableOpacity>
       </View>
 
-      {/* Sección de acciones rápidas */}
-      {/*<View style={styles.actionsSection}>
-        <Text style={[styles.sectionTitle, textStyle, textColorStyle]}>
-          Acciones Rápidas
-        </Text>
-        
-        <View style={styles.actionsGrid}>
-          <TouchableOpacity 
-            style={[styles.actionCard, cardStyle]}
-            onPress={() => handleTipPress('Ve a la pantalla de registros para ver todos tus registros')}
-            accessible={true}
-            accessibilityLabel="Ir a registros"
-            accessibilityRole="button"
-          >
-            <Text style={[styles.actionIcon, textStyle]}></Text>
-            <Text style={[styles.actionText, textStyle, textColorStyle]}>Ver registros</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity 
-            style={[styles.actionCard, cardStyle]}
-            onPress={() => handleTipPress('Ve a la pantalla de perfil para configurar la accesibilidad')}
-            accessible={true}
-            accessibilityLabel="Configurar accesibilidad"
-            accessibilityRole="button"
-          >
-            <Text style={[styles.actionIcon, textStyle]}>♿</Text>
-            <Text style={[styles.actionText, textStyle, textColorStyle]}>Configurar accesibilidad</Text>
-          </TouchableOpacity>
-        </View>
-      </View>/*}
-
       {/* Tips de navegación */}
       <View style={[styles.tipsCard, cardStyle]}>
         <Text style={[styles.tipsTitle, textStyle, textColorStyle]}>
           Tips de navegación:
         </Text>
-        <TouchableOpacity onPress={() => handleTipPress('Traza una L en la pantalla para activar o desactivar TalkBack')}>
-          <Text style={[styles.tipText, textStyle, textColorStyle]}>
-            • Traza una "L" en la pantalla para activar/desactivar TalkBack
-          </Text>
-        </TouchableOpacity>
+        
         <TouchableOpacity onPress={() => handleTipPress('Desliza con dos dedos para hacer scroll')}>
           <Text style={[styles.tipText, textStyle, textColorStyle]}>
             • Desliza con dos dedos para hacer scroll
@@ -290,20 +257,38 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#333333',
   },
-  welcome: {
-    fontWeight: 'bold',
+  welcomeHeader: {
+    alignItems: 'center',
     marginBottom: 12,
+  },
+  welcome: {
+    fontSize: 24,
+    fontWeight: 'bold',
     textAlign: 'center',
+  },
+  adminBadge: {
+    backgroundColor: '#f39c12',
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 12,
+    marginTop: 8,
+  },
+  adminBadgeText: {
+    color: '#ffffff',
+    fontSize: 14,
+    fontWeight: 'bold',
   },
   message: {
     textAlign: 'center',
     lineHeight: 22,
+    marginTop: 8,
   },
   metricsSection: {
     marginHorizontal: 16,
     marginBottom: 16,
   },
   sectionTitle: {
+    fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 12,
     marginLeft: 4,
@@ -377,32 +362,13 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontStyle: 'italic',
   },
-  actionsSection: {
-    marginHorizontal: 16,
-    marginBottom: 16,
-  },
-  actionsGrid: {
-    gap: 12,
-  },
-  actionCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 16,
-  },
-  actionIcon: {
-    fontSize: 28,
-    marginRight: 16,
-  },
-  actionText: {
-    fontSize: 16,
-    fontWeight: '500',
-  },
   tipsCard: {
     marginHorizontal: 16,
     marginBottom: 20,
     padding: 16,
   },
   tipsTitle: {
+    fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 12,
   },
